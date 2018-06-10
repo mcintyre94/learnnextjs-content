@@ -131,14 +131,17 @@ Now we need to create the post page to show the blog post. In order to do that, 
 Create a file called \`pages/post.js\` and add the following content:
 
 ~~~js
+import {withRouter} from 'next/router'
 import Layout from '../components/MyLayout.js'
 
-export default (props) => (
+const Page = withRouter((props) => (
     <Layout>
-       <h1>{props.url.query.title}</h1>
+       <h1>{props.router.query.title}</h1>
        <p>This is the blog post content.</p>
     </Layout>
-)
+))
+
+export default Page
 ~~~
 
 Now our page will look like this:
@@ -147,29 +150,32 @@ Now our page will look like this:
 
 Here's what's happening in the above code.
 
-* Every page will get a prop called “URL” which has some details related to the current URL.
-* In this case, we are using the “query” object, which has the query string params.
-* Therefore, we get the title with \`props.url.query.title\`.
+* We import and use the "withRouter" function from "next/router" this will inject the Next.js router as a property
+* In this case, we are using the router's “query” object, which has the query string params.
+* Therefore, we get the title with \`props.router.query.title\`.
 
 ---
 
 Let's do a simple modification to our app. Replace the content of the “pages/post.js” with the following:
 
 ~~~js
+import {withRouter} from 'next/router'
 import Layout from '../components/MyLayout.js'
 
 const Content = (props) => (
   <div>
-    <h1>{props.url.query.title}</h1>
+    <h1>{props.router.query.title}</h1>
     <p>This is the blog post content.</p>
   </div>
 )
 
-export default () => (
+const Page = withRouter((props) => (
     <Layout>
        <Content />
     </Layout>
-)
+))
+
+export default Page
 ~~~
 
 What'll happen when you navigate to this page? http://localhost:3000/post?title=Hello%20Next.js
@@ -178,24 +184,37 @@ What'll happen when you navigate to this page? http://localhost:3000/post?title=
     },
 
     {
-      id: 'special-prop-url',
+      id: 'with-router',
       type: 'text',
       points: 5,
       text: `
-## Special prop "url"
+## withRouter
 
 As you can see, that code will throw an error like this:
 
 ![](https://cloud.githubusercontent.com/assets/50838/24542720/5fd985a0-161a-11e7-8971-bc677906b1bf.png)
 
-That's because, \`url\` prop is only exposed to the page's main component. That's not exposed for other components used in the page. But, if you need, you can pass it like this:
+That's because we're injecting the \`router\` property into the \`Page\` component by calling \`withRouter\` on it.
+\`withRouter\` can be used on any component in your Next.js application. So in this case we can move the \`withRouter\` call to the \`Content\` component:
 
 ~~~js
-export default (props) => (
+import {withRouter} from 'next/router'
+import Layout from '../components/MyLayout.js'
+
+const Content = withRouter((props) => (
+  <div>
+    <h1>{props.router.query.title}</h1>
+    <p>This is the blog post content.</p>
+  </div>
+))
+
+const Page = (props) => (
     <Layout>
-       <Content url={props.url} />
+       <Content />
     </Layout>
 )
+
+export default Page
 ~~~
       `
     },
@@ -211,7 +230,7 @@ Now we've learned how to create dynamic pages using query strings. This is just 
 
 A dynamic page might need more information to render, and we may not be able to pass all of them via query strings. Or we may want to have clear URLs like this: http://localhost:3000/blog/hello-nextjs
 
-We can learn all about these things in upcoming lessons. This is the base for all of them.
+We will learn all about these things in upcoming lessons. This is the base for all of them.
       `
     }
   ]
