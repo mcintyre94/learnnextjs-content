@@ -66,7 +66,9 @@ Then open the "package.json" in the hello-next directory and add the following N
 ~~~json
 {
   "scripts": {
-    "dev": "next"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   }
 }
 ~~~
