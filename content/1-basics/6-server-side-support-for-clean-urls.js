@@ -94,7 +94,9 @@ Now update your npm dev script to:
 ~~~json
 {
   "scripts": {
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
   }
 } 
 ~~~
