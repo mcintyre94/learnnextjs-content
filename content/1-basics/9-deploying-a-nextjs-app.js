@@ -1,13 +1,13 @@
 module.exports = {
   name: 'Deploying a Next.js App',
   intro: `
-Have you ever come across this question?
+Have you ever come across the question:
 
 > How can I deploy my Next.js app?
 
 We haven't talked about that yet, but it's pretty simple and straightforward.
 
-You can deploy a Next.js app into anywhere you can run Node.js. So, there's not any kind of lock-in, even though deploying into [▲ZEIT now](https://zeit.co/now) is super simple.
+You can deploy a Next.js app to anywhere you can run Node.js. So, there's not any kind of lock-in, even though deploying with [▲ZEIT Now](https://zeit.co/now) is super simple.
 
 Let's learn about deploying Next.js apps.
   `,
@@ -125,7 +125,7 @@ Is it possible to access our app on both ports?
       text: `
 ## Build Once, Run Many Instances
 
-As you can see, you need to build your app once. Then you can start it on as many ports as you wish.
+As you can see, you need to only build your app once. Then you can start it on as many ports as you wish.
       `
     },
 
@@ -141,13 +141,11 @@ As you can see, you need to build your app once. Then you can start it on as man
       ],
       correctAnswer: '443 (or without a port mentioned)',
       text: `
-## Deploying to ▲ZEIT now
+## Deploying to ▲ZEIT Now
 
 Now we know how to build and start a Next.js app. We did everything with npm scripts. So, you will be able to customize it to work with your favorite deployment service.
 
-But if you use [▲ZEIT now](https://zeit.co/now), there is only a single step.
-
-Just add the following npm scripts:
+If you use [▲ZEIT Now](https://zeit.co/now), hust add the following scripts to the package.json file:
 
 ~~~json
 "scripts": {
@@ -156,17 +154,28 @@ Just add the following npm scripts:
 }
 ~~~
 
-Then [install now](https://zeit.co/now). Then apply the following command:
+Then, create a now.json file in the root of your project with the following contents:
+
+~~~json
+{
+  "version": 2,
+  "builds": [
+    { "src": "package.json", "use": "@now/next" }
+  ]
+}
+~~~
+
+Finally, [install Now](https://zeit.co/now) and run the following command:
 
 ~~~
 now
 ~~~
 
-> Basically, you run the “now” command inside your app's root directory.
+> Basically, you run the “now” command from your terminal inside your app's root directory.
 
-Here, we mentioned port 8000 as the port in which we start our app. But we didn't change it when deploying to ZEIT now.
+Here, we mentioned port 8000 as the port in which we start our app. But we didn't change it when deploying to ZEIT Now.
 
-So, in which port could we access our app when deployed to ZEIT now?
+So, in which port could we access our app when deployed to ZEIT Now?
       `
     },
 
@@ -175,11 +184,13 @@ So, in which port could we access our app when deployed to ZEIT now?
       type: 'text',
       points: 5,
       text: `
-## ZEIT will always use 443
+## ZEIT Now will always use 443
 
-Actually, even if you start your app on port 8000, once deployed to now, you can access it with port 443 (the default port for "https" websites).
+Even if you start your app on port 8000, once deployed to now, you can access it with port 443 (the default port for "https" websites).
 
-That's a feature of ▲ZEIT now. You only need to start your app on any port you like. ▲ZEIT now will map it to port 443 always.
+That's a feature of ▲ZEIT Now. You only need to start your app on any port you like elsewhere. ▲ZEIT Now will map it to port 443 always.
+
+> Learn more about the Next builder @now/next at [the ZEIT documentation](https://zeit.co/docs/v2/deployments/official-builders/next-js-now-next).
       `
     },
 
@@ -190,9 +201,9 @@ That's a feature of ▲ZEIT now. You only need to start your app on any port you
       text: `
 ## Build Your App Locally
 
-▲ZEIT now will detect the \`npm build\` script and build it inside it's build infrastructure.
+▲ZEIT Now will build your app inside it's build infrastructure.
 
-But, not every hosting providers have something like that.
+But, not every hosting provider will have something like that.
 In that case, you can build your app locally with:
 
 ~~~bash
@@ -204,110 +215,17 @@ Then deploy the app with the \`.next\` directory.
     },
 
     {
-      id: 'deploy-with-a-custom-server',
-      type: 'text',
-      points: 20,
-      text: `
-## Deploying an app with a custom server
-
-The app we just deployed doesn't use a custom server code. But if we have that, how can we deploy it?
-
-So, checkout the following branch:
-
-~~~bash
-git checkout .
-git checkout clean-urls-ssr
-~~~
-
-In that, we use a custom server to run our app, so add Express into your app:
-
-~~~bash
-npm install --save express
-~~~
-
-### Build the app
-
-Even for that, you can build your app with the next build. So add the following npm script for that:
-
-~~~json
-"scripts": {
-  "build": "next build"
-}
-~~~
-
-### Start the app
-
-We need to create our custom server code to mention that this is a production app. For that, have a look at this code from our server.js
-
-~~~js
-const express = require('express')
-const next = require('next')
-
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
-
-app.prepare()
-.then(() => {
-  const server = express()
-
-  server.get('/p/:id', (req, res) => {
-    const actualPage = '/post'
-    const queryParams = { title: req.params.id }
-    app.render(req, res, actualPage, queryParams)
-  })
-
-  server.get('*', (req, res) => {
-    return handle(req, res)
-  })
-
-  server.listen(3000, (err) => {
-    if (err) throw err
-    console.log('> Ready on http://localhost:3000')
-  })
-})
-.catch((ex) => {
-  console.error(ex.stack)
-  process.exit(1)
-})
-~~~
-
-Have a look at the line below:
-
-~~~js
-const dev = process.env.NODE_ENV !== 'production'
-~~~
-
-So, we can start our app like this for production:
-
-~~~bash
-NODE_ENV=production node server.js
-~~~
-
-So, our “npm start” script will be like this:
-
-~~~json
-"scripts": {
-   "start": "NODE_ENV=production node server.js"
-}
-~~~
-
-That's all you have to do.
-      `
-    },
-
-    {
       id: 'finally',
       type: 'text',
       points: 5,
       text: `
 ## Finally
 
-Now you know almost everything about deploying a Next.js app.
+Now you know how to deploy a Next.js app with [ZEIT Now](https://zeit.co/now).
 
-You can also learn more about [deploying Next.js](https://github.com/zeit/next.js#production-deployment) from our docs.
+You can also learn more about [deploying Next.js](https://nextjs.org/docs#production-deployment) from our docs.
 
-If you have any questions regarding deployments, feel free to ping us on [Slack](https://zeit.chat/) or submit an [issue](https://github.com/zeit/next.js/issues).
+If you have any questions regarding deployments, feel free to ping us on [Spectrum](https://zeit.chat/).
       `
     }
   ]
