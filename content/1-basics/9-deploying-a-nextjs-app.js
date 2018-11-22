@@ -137,7 +137,7 @@ As you can see, you need to only build your app once. Then you can start it on a
         '8000',
         '443 (or without a port mentioned)',
         'Any port you mentioned in the URL',
-        'It will throw an error saying, "You can only start your app on port 443"'
+        'It will throw an error saying, \'You can only start your app on port 443\''
       ],
       correctAnswer: '443 (or without a port mentioned)',
       text: `
