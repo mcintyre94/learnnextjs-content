@@ -145,7 +145,7 @@ As you can see, you need to only build your app once. Then you can start it on a
 
 Now we know how to build and start a Next.js app. We did everything with npm scripts. So, you will be able to customize it to work with your favorite deployment service.
 
-If you use [▲ZEIT Now](https://zeit.co/now), hust add the following scripts to the package.json file:
+Using [▲ZEIT Now](https://zeit.co/now), add the following scripts to the package.json file:
 
 ~~~json
 "scripts": {
