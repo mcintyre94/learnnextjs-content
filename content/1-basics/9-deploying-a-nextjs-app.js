@@ -160,7 +160,11 @@ Then, create a now.json file in the root of your project with the following cont
 {
   "version": 2,
   "builds": [
-    { "src": "package.json", "use": "@now/next" }
+    {
+      "src": "package.json",
+      "use": "@now/next",
+      "config": { "maxLambdaSize": "50mb" }
+    }
   ]
 }
 ~~~
